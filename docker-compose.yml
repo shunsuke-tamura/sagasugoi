@@ -1,0 +1,39 @@
+version: "3.7"
+
+services:
+  db:
+    build:
+      context: ./sagasugoi_back
+      dockerfile: ./docker/db/Dockerfile
+    ports:
+      - ${MYSQL_PORT}:${MYSQL_PORT}
+    volumes:
+      - ./docker/db/data:/var/lib/mysql
+    environment:
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_PASSWORD}
+      # MYSQL_ALLOW_EMPTY_PASSWORD: ${MYSQL_ALLOW_EMPTY_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+  backend:
+    build:
+      context: ./sagasugoi_back
+      dockerfile: ./docker/server/Dockerfile
+    ports:
+      - ${SERVER_PORT}:${SERVER_PORT}
+    depends_on:
+      - db
+    volumes:
+      - ./sagasugoi_back/src/:/go/src
+    tty: true
+  frontend:
+    image: node:16-alpine
+    ports:
+      - 3000:3000
+    depends_on:
+      - front
+      - back
+    volumes:
+      - ./sagasugoi_front/:/front
+    command: /bin/ash -c "cd front && yarn install && yarn serve"
+    tty: true
