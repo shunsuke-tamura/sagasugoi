@@ -1,0 +1,6 @@
+[submodule "sagasugoi_back"]
+	path = sagasugoi_back
+	url = git@github.com:shunsuke-tamura/sagasugoi_back.git
+[submodule "sagasugoi_front"]
+	path = sagasugoi_front
+	url = git@github.com:shunsuke-tamura/sagasugoi_front.git
